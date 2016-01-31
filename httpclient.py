@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Copyright 2013 Abram Hindle
+# Copyright 2016 Abram Hindle, https://github.com/tywtyw2002, and https://github.com/treedust
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ from urlparse import urlparse
 def help():
     print "httpclient.py [GET/POST] [URL]\n"
 
-class HTTPRequest(object):
+class HTTPResponse(object):
     def __init__(self, code=200, body=""):
         self.code = code
         self.body = body
@@ -103,6 +103,7 @@ class HTTPClient(object):
 
     def GET(self, url, args=None):
 
+
         #use split to parse url
 	urlparse = url.split('/')[2].split(':')
 	hostName = urlparse[0]
@@ -125,7 +126,7 @@ class HTTPClient(object):
         response = self.recvall(s)
         code = self.get_code(response)
         body = self.get_body(response)
-        return HTTPRequest(code, body)
+        return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
         if (args != None):
@@ -154,7 +155,8 @@ class HTTPClient(object):
         message = self.recvall(s)
         code = self.get_code(message)
         body = self.get_body(message)
-        return HTTPRequest(code, body)
+        return HTTPResponse(code, body)
+
 
     def command(self, url, command="GET", args=None):
         if (command == "POST"):
@@ -169,6 +171,6 @@ if __name__ == "__main__":
         help()
         sys.exit(1)
     elif (len(sys.argv) == 3):
-        print client.command( sys.argv[1], sys.argv[2] )
+        print client.command( sys.argv[2], sys.argv[1] )
     else:
-        print client.command( command, sys.argv[1] )    
+        print client.command( sys.argv[1] )   
