@@ -69,20 +69,25 @@ class HTTPRequest(object):
 class HTTPClient(object):
     #def get_host_port(self,url):
     def connect(self, host, port):
-        # use sockets!
-
+	#new socket
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+	#connect to the host
         s.connect((host, port))
+
         return s
 
     def get_code(self, data):
+
 	#print 'split by rnrn: '+data.split('\r\n\r\n')[1]
         return int(data.split(' ',2)[1])
 
     def get_headers(self,data):
+
         return data.split('\r\n\r\n')[0]
 
     def get_body(self, data):
+
         return data.split('\r\n\r\n',2)[1]
 
     def recvall(self, sock):
@@ -97,14 +102,25 @@ class HTTPClient(object):
         return str(buffer)
 
     def GET(self, url, args=None):
+
         #use split to parse url
 	urlparse = url.split('/')[2].split(':')
 	hostName = urlparse[0]
-	port = urlparse[1]
 
+	#handle regular urls without port number
+	if len(urlparse) == 2:
+		port = int(urlparse[1])		
+		
+	else:
+		port = 80	
+	#parse path
+	path = url.split(hostName)[1].split('?')[0]
+
+	#using socket conneting to the url
         s = self.connect(hostName, port)
-	#writting a GET request string
-        message = "GET %s HTTP/1.1\r\nHost: %s\r\nAccept: */*\r\nConnection: close\r\n\r\n" % (parseUrl.path, parseUrl.hostname)
+
+	#writting a GET request string 
+        message = "GET %s HTTP/1.1\r\nHost: %s\r\nAccept: */*\r\nConnection: close\r\n\r\n" % (path, hostName)
         s.send(message)
         response = self.recvall(s)
         code = self.get_code(response)
@@ -112,8 +128,32 @@ class HTTPClient(object):
         return HTTPRequest(code, body)
 
     def POST(self, url, args=None):
-        code = 500
-        body = ""
+        if (args != None):
+            Postcontent = urllib.urlencode(args)
+        else:
+            Postcontent = ""
+        PostcontentLength = len(Postcontent)        
+
+        #use split to parse url
+	urlparse = url.split('/')[2].split(':')
+	hostName = urlparse[0]
+
+	#handle regular urls without port number
+	if len(urlparse) == 2:
+		port = int(urlparse[1])		
+		
+	else:
+		port = 80	
+	#parse path
+	path = url.split(hostName)[1].split('?')[0]
+
+	#using socket conneting to the url
+        s = self.connect(hostName, port)  
+      	message = "POST %s HTTP/1.1\r\nHost: %s\r\nAccept: */*\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: %d\r\n\r\n%s\r\n" % (path, hostName, PostcontentLength, Postcontent)
+        s.send(message)
+        message = self.recvall(s)
+        code = self.get_code(message)
+        body = self.get_body(message)
         return HTTPRequest(code, body)
 
     def command(self, url, command="GET", args=None):
