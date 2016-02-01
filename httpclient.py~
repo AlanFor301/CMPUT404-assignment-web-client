@@ -84,14 +84,18 @@ class HTTPClient(object):
 		port = 80	
 	#parse path
 	path = url.split(hostName)[1].split('?')[0]
-	print '---------'+ path+ '---------'
+
 	#using socket conneting to the url
         s = self.connect(hostName, port)
 
 	#writting a GET request string 
         message = "GET %s HTTP/1.1\r\nHost: %s\r\nAccept: */*\r\nConnection: close\r\n\r\n" % (path, hostName)
         s.send(message)
+	
+	
+	#getting response
         response = self.recvall(s)
+
         code = self.get_code(response)
         body = self.get_body(response)
         return HTTPResponse(code, body)
@@ -120,8 +124,13 @@ class HTTPClient(object):
 	#using socket conneting to the url
         s = self.connect(hostName, port)  
       	message = "POST %s HTTP/1.1\r\nHost: %s\r\nAccept: */*\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: %d\r\n\r\n%s\r\n" % (path, hostName, PostcontentLength, Postcontent)
+	
+	#sending socket
         s.send(message)
+
+	#getting response
         message = self.recvall(s)
+
         code = self.get_code(message)
         body = self.get_body(message)
         return HTTPResponse(code, body)
