@@ -105,18 +105,18 @@ class HTTPClient(object):
 
 
         #use split to parse url
-	urlparse = url.split('/')[2].split(':')
-	hostName = urlparse[0]
+	urlsplit = url.split('/')[2].split(':')
+	hostName = urlsplit[0]
 
 	#handle regular urls without port number
-	if len(urlparse) == 2:
-		port = int(urlparse[1])		
+	if len(urlsplit) == 2:
+		port = int(urlsplit[1])		
 		
 	else:
 		port = 80	
 	#parse path
 	path = url.split(hostName)[1].split('?')[0]
-
+	print '---------'+ path+ '---------'
 	#using socket conneting to the url
         s = self.connect(hostName, port)
 
@@ -129,6 +129,7 @@ class HTTPClient(object):
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
+	#using urlencode arguments
         if (args != None):
             Postcontent = urllib.urlencode(args)
         else:
@@ -136,15 +137,15 @@ class HTTPClient(object):
         PostcontentLength = len(Postcontent)        
 
         #use split to parse url
-	urlparse = url.split('/')[2].split(':')
-	hostName = urlparse[0]
+	urlsplit = url.split('/')[2].split(':')
+	hostName = urlsplit[0]
 
 	#handle regular urls without port number
-	if len(urlparse) == 2:
-		port = int(urlparse[1])		
-		
+	if len(urlsplit) == 2:
+		port = int(urlsplit[1])		
 	else:
-		port = 80	
+		port = 80
+
 	#parse path
 	path = url.split(hostName)[1].split('?')[0]
 
