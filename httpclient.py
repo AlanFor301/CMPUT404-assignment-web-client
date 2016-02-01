@@ -17,39 +17,7 @@
 # Do not use urllib's HTTP GET and POST mechanisms.
 # Write your own HTTP GET and POST
 # The point is to understand what you have to send and get experience with it
-'''
-You left me paralized
 
-but the only troppy you deserve is catastrophy
-
-one day you know too much that heaven is a sin.
-fade to black 
-please fade fade fade to black 
-
-every kiss got me crying 
-because your eyes nose lips
-
-they said time flies but you keep breaking its wings
-after taht they show taht all that hell is all taht brings
-
-
-you wish me well
-you wish me well
-I wish you hell
-
-never want hear your voice again
-
-let me go 
-let me go
-
-baby tell me please this is the end
-
-tears got out of my mind
-
-still got me crying 
-i do crying 
-
-'''
 import sys
 import socket
 import re
